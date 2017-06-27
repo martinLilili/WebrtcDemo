@@ -53,6 +53,7 @@ class ViewController: UIViewController {
         let constraints = RTCMediaConstraints(mandatoryConstraints: nil, optionalConstraints: [RTCPair(key: "DtlsSrtpKeyAgreement", value: "true")])
         connection = factory.peerConnection(withICEServers: ICEServers, constraints: constraints, delegate: self)
         
+        //加入本地视频流
         connection?.add(localStream)
     
     }
@@ -91,6 +92,7 @@ class ViewController: UIViewController {
         
     }
     
+    //本地视频的约束条件
     func localVideoConstraints() -> RTCMediaConstraints {
 
         let maxWidth = RTCPair(key: "maxWidth", value: "640")
@@ -113,6 +115,7 @@ class ViewController: UIViewController {
         return RTCICEServer(uri: defaulturl, username: "", password: "")
     }
     
+    //offer或answer的约束条件
     func offerOranswerConstraint() -> RTCMediaConstraints {
         let receiveAudio = RTCPair(key: "OfferToReceiveAudio", value: "true")
         let receiveVideo = RTCPair(key: "OfferToReceiveVideo", value: "true")
@@ -121,8 +124,6 @@ class ViewController: UIViewController {
     }
 
     @IBAction func offerBtnClicked(_ sender: UIButton) {
-        
-        
         connection?.createOffer(with: self, constraints: offerOranswerConstraint())
         
     }
@@ -143,11 +144,7 @@ extension ViewController : RTCPeerConnectionDelegate{
         print("addedStream")
         DispatchQueue.main.async {
             if stream.videoTracks.count > 0{
-                self.remoteVideoTrack = stream.videoTracks.last
-                    
-                    
-                    
-                    as! RTCVideoTrack
+                self.remoteVideoTrack = stream.videoTracks.last as? RTCVideoTrack
                 
                 let remoteVideoView = RTCEAGLVideoView(frame: CGRect(x:0, y:0, width: 100, height: 100 * 640 /
                     480))
@@ -250,9 +247,6 @@ extension ViewController : RTCSessionDescriptionDelegate {
                 var dic = [String:String]()
                 dic["event"] = "answer"
                 dic["sdp"] = peerConnection.localDescription.description
-                
-                
-                
                 let data : Data? = try? JSONSerialization.data(withJSONObject: dic)
                 var str = String(data: data!, encoding: String.Encoding.utf8)!
                 str += "|"
