@@ -19,4 +19,4 @@ A点击发起offer
 如上即可实现A和B通信
 
 
-文档地址：[WebRTCDemo](http://moonlspace.com/2016/12/WebRTCDemo/)
+文档地址：[WebRTCDemo](http://martinlilili.github.io/2016/12/WebRTCDemo/)
